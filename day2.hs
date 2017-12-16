@@ -2,6 +2,8 @@
 import Data.List()
 import Data.Maybe
 
+-- DAY 2
+
 main :: IO ()
 main = do
     -- result <- day2_1 <$> readFile "day2.in"
@@ -11,7 +13,7 @@ main = do
     let result = "hi"
     print result
 
--- PROBLEM DAY 2-1
+-- DAY 2 PROBLEM
 
 day2_1_tests :: Bool
 day2_1_tests = let f = day2_1 in 
@@ -23,7 +25,7 @@ day2_1 = sum . map (\row -> let (mn, mx) = minmax row in mx - mn) . strToTable
 minmax :: Ord a => [a] -> (a, a)
 minmax (x:xs) = foldl (\(mn, mx) y -> (y `min` mn, y `max` mx)) (x, x) xs
 
--- PROBLEM DAY 2-2
+-- DAY 2 EXTRA PROBLEM
 
 day2_2_tests :: Bool
 day2_2_tests = let f = day2_2 in 

@@ -2,6 +2,8 @@
 import Data.List()
 import Data.Char
 
+-- DAY 1
+
 main :: IO ()
 main = do
     -- result <- day1_2 <$> readFile "day1.in"
@@ -11,7 +13,7 @@ main = do
     let result = "hi"
     print result
 
--- PROBLEM DAY 1-1
+-- DAY 1 PROBLEM
 
 day1_1_tests :: Bool
 day1_1_tests = let f = day1_1 in 
@@ -31,7 +33,7 @@ sumOfFollowedBySame xs@(hd:_) = sub xs
           sub [y] = if y == hd then y else 0
           sub (y1:ys@(y2:_)) = (if y1 == y2 then y1 else 0) + sub ys
 
--- PROBLEM DAY 1-2
+-- DAY 1 EXTRA PROBLEM
 
 day1_2_tests :: Bool
 day1_2_tests = let f = day1_2 in 
