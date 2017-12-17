@@ -118,3 +118,34 @@ aa bb cc db
 aba db baa dd
 aa bb cc aaa
 ```
+
+## [Day 5](http://adventofcode.com/2017/day/5)
+
+### Problem 
+
+Given an array of offsets, determine how many steps will it take to leave the array.
+You begin at the first position in the array.
+On each turn, add current position value to index and jump there.
+Also increment the value in the cell which you have just left.
+
+Example sequence of states which finishes in `5` steps:
+* `(0) 3  0  1  -3` - before we have taken any steps.
+* `(1) 3  0  1  -3` - jump with offset `0` (that is, don't jump at all). Fortunately, the instruction is then incremented to `1`.
+* `2 (3) 0  1  -3 ` - step forward because of the instruction we just modified. The first instruction is incremented again, now to `2`.
+* `2  4  0  1 (-3)` - jump all the way to the end; leave a `4` behind.
+* `2 (4) 0  1  -2 ` - go back to where we just were; increment `-3` to `-2`.
+* `2  5  0  1  -2 ` - jump `4` steps forward, escaping the array.
+
+#### Extra problem
+
+Problem is the same as previous except the increment rule.
+Now the value in a cell is incremented only if it is less than 3 and decremented otherwise.
+
+Starting with array:
+```
+(0) 3  0  1  -3 
+```
+It is now takes 10 steps to escape, leaving the array in the following state:
+```
+2 3 2 3 -1
+```
