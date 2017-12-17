@@ -105,3 +105,16 @@ aa bb cc dd
 aa bb aa dd
 aa bb cc aaa
 ```
+
+### Extra problem
+
+Given a list of phrases, count how name of them does not contain anagram words.
+Two words are anagrams of each other if one word can be obtained by permutation of letters in the other.
+Each word in a phrase consists only of lowercase latin letters.
+
+The answer for the following example is `2` because only the second phrase contains anagrams `aba` and `baa`.
+```
+aa bb cc db
+aba db baa dd
+aa bb cc aaa
+```

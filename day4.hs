@@ -1,11 +1,13 @@
 
+import Data.List
+
 -- DAY 4
 
 main :: IO ()
 main = do
-    let result = "hi"
+    -- let result = "hi"
     -- result <- day4 <$> readFile "day4.in"
-    -- result <- day4extra . read <$> readFile "day4.in"
+    result <- day4extra <$> readFile "day4.in"
     -- let result = day4Tests
     print result
 
@@ -22,3 +24,15 @@ day4 = length . filter (not . containsDuplicates) . map words . lines
 containsDuplicates :: Eq a => [a] -> Bool
 containsDuplicates [] = False
 containsDuplicates (w:ws) = w `elem` ws || containsDuplicates ws
+
+-- DAY 4 EXTRA PROBLEM
+
+day4extra :: String -> Int
+day4extra = length . filter (not . containsAnagrams) . map words . lines
+
+containsAnagrams :: [String] -> Bool
+containsAnagrams [] = False
+containsAnagrams (w:ws) = any (w `isAnagramTo`) ws || containsAnagrams ws
+
+isAnagramTo :: String -> String -> Bool
+w1 `isAnagramTo` w2 = sort w1 == sort w2
