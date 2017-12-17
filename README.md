@@ -92,4 +92,16 @@ which is greater than the given value.
 The spiral is build incrementally, setting a value of each cell 
 to a sum of all adjoined cells which has already been computed.
 
+## [Day 4](http://adventofcode.com/2017/day/4)
 
+### Problem 
+
+Given a list of phrases, count how many of them does not contain duplicate words.
+Each word in a phrase consists only of lowercase latin letters.
+
+The answer for the following example is `2` because only the second phrase has duplicate word `aa`.
+```
+aa bb cc dd
+aa bb aa dd
+aa bb cc aaa
+```
