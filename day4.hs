@@ -28,11 +28,7 @@ containsDuplicates (w:ws) = w `elem` ws || containsDuplicates ws
 -- DAY 4 EXTRA PROBLEM
 
 day4extra :: String -> Int
-day4extra = length . filter (not . containsAnagrams) . map words . lines
-
-containsAnagrams :: [String] -> Bool
-containsAnagrams [] = False
-containsAnagrams (w:ws) = any (w `isAnagramTo`) ws || containsAnagrams ws
+day4extra = length . filter (not . containsDuplicates . map sort) . map words . lines
 
 isAnagramTo :: String -> String -> Bool
 w1 `isAnagramTo` w2 = sort w1 == sort w2
