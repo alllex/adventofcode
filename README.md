@@ -57,3 +57,39 @@ For example, given the following input:
 * In the third row, the result is `2`.
 * In this example, the sum of the results would be `4 + 3 + 2 = 9`.
 
+## [Day 3](http://adventofcode.com/2017/day/3)
+
+### Problem 
+
+Given an index in the infinite spiral below, find [Manhattan Distance](https://en.wikipedia.org/wiki/Taxicab_geometry)
+between position of the index and the center.
+```
+17  16  15  14  13
+18   5   4   3  12
+19   6   1   2  11
+20   7   8   9  10
+21  22  23---> ...
+```
+
+For example:
+* Distance from index `1` is `0` because it is already the center.
+* Distance from `12` is `3` steps, such as: down, left, left.
+* Distance from `23` is only `2` steps: up twice.
+* Distance from `1024` is `31` steps.
+
+### Extra problem
+
+Find the first value in an infinite spiral of adjoined sums below, 
+which is greater than the given value.
+```
+147  142  133  122   59
+304    5    4    2   57
+330   10    1    1   54
+351   11   23   25   26
+362  747  806--->   ...
+```
+
+The spiral is build incrementally, setting a value of each cell 
+to a sum of all adjoined cells which has already been computed.
+
+
