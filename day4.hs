@@ -5,9 +5,9 @@ import Data.List
 
 main :: IO ()
 main = do
-    -- let result = "hi"
+    let result = "hi"
     -- result <- day4 <$> readFile "day4.in"
-    result <- day4extra <$> readFile "day4.in"
+    -- result <- day4extra <$> readFile "day4.in"
     -- let result = day4Tests
     print result
 
