@@ -4,7 +4,7 @@ This repository contains solutions for puzzles from [Advent of code 2017](http:/
 
 ## [Day 1](http://adventofcode.com/2017/day/1)
 
-### Problem 1
+### Problem
 
 Given a string of digits, find a sum of all digits which are followed by the same digit. The first digit is considered to follow the last digit in the string.
 
@@ -136,7 +136,7 @@ Example sequence of states which finishes in `5` steps:
 * `2 (4) 0  1  -2 ` - go back to where we just were; increment `-3` to `-2`.
 * `2  5  0  1  -2 ` - jump `4` steps forward, escaping the array.
 
-#### Extra problem
+### Extra problem
 
 Problem is the same as previous except the increment rule.
 Now the value in a cell is incremented only if it is less than 3 and decremented otherwise.
@@ -149,3 +149,29 @@ It is now takes 10 steps to escape, leaving the array in the following state:
 ```
 2 3 2 3 -1
 ```
+
+## [Day 6](http://adventofcode.com/2017/day/6)
+
+### Problem 
+
+Given an array of numbers, find how many iteration it will take to repeat the configuration.
+Iteration consists of several steps:
+* find the biggest element in array (first if thereare several);
+* empty the value of the biggest element;
+* redistribute the value across all elements adding it one by one in circles starting from the next element.
+
+The following sequence shows repeating configuration after `5` steps.
+```
+0 2 7 0
+2 4 1 2 *
+3 1 2 3
+0 2 3 4
+1 3 4 1
+2 4 1 2 *
+```
+
+### Extra problem
+
+For the previous problem, find the size of the loop in configurations.
+
+For the previous example the size is `4`.
