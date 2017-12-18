@@ -22,26 +22,56 @@ day7 input = findRoot $ map parseLine $ lines input
 
 -- DAY 7 EXTRA PROBLEM
 
-day7extra input = weighChildren edgeMap root 
+day7extra input = findTreeOutlier edgeMap wMap root
     where
         edges = map parseLine $ lines input
         root = findRoot edges
         edgeMap = foldl (\m (p, w, cs) -> M.insert p (w, cs) m) M.empty edges
+        (_, wMap) = weighChildren edgeMap root 
+        -- rootCs = map (\c -> (c, getWeight wMap c)) $ getChildren edgeMap root
+
+findTreeOutlier cMap wMap node = findOutlier children
+    where
+        children = map (\c -> (c, getWeight wMap c)) $ getChildren cMap node
+        -- treeOutlier = case findOutlier children of 
+        --                Nothing -> Nothing
+        --                Just (nw, (outKey, outVal)) -> 
+
+findOutlierTests :: Bool
+findOutlierTests = let f = fst . snd . fromJust . findOutlier in 
+    (f [("a", 1), ("b", 2), ("c", 2)] == "a") && 
+    (f [("a", 2), ("b", 1), ("c", 2)] == "b") && 
+    (f [("a", 2), ("b", 2), ("c", 1)] == "c") 
+
+findOutlier :: [(String, Int)] -> Maybe (Int, (String, Int))
+findOutlier [] = Nothing
+findOutlier [_] = Nothing
+findOutlier [_, _] = Nothing
+findOutlier (v1@(_, c1):vs@(v2@(_, c2):v3@(_, c3):_))
+        | c1 == c2 && c2 == c3 = findOutlier vs
+        | c1 /= c2 && c2 == c3 = Just (c2, v1)
+        | c1 == c3 && c2 /= c1 = Just (c3, v2)
+        | c1 == c2 && c2 /= c3 = Just (c1, v3)
+
+getWeight :: M.StringMap (Int, Int) -> String -> Int
+getWeight wMap node = snd $ (M.!) wMap node
+
+getChildren :: M.StringMap (Int, [String]) -> String -> [String]
+getChildren edgeMap parent = snd $ (M.!) edgeMap parent
 
 data Balance = Bal Int Int | Unbal Int deriving Show
 
-weighChildren :: M.StringMap (Int, [String]) -> String -> Balance
+weighChildren :: M.StringMap (Int, [String]) -> String -> (Int, M.StringMap (Int, Int))
 weighChildren edgeMap parent = 
     case (M.!) edgeMap parent of
-     (w, []) -> Bal w w
-     (w, cs) -> fromMaybe undefined unbal
-      where 
-        cw = map (weighChildren edgeMap) cs 
-        balChildren = map (\(Bal w cSum) -> (w, cSum)) $ filter (not . isUnbal) cw
-        unbal = find isUnbal cw
-        isUnbal (Unbal _) = True
-        isUnbal _ = False
-
+     (w, []) -> (w, M.singleton parent (w, w))
+     (w, cs) -> (nodeSum, M.insert parent (w, nodeSum) nodeMap)
+        where 
+            weightedChildren = map (weighChildren edgeMap) cs
+            childWeights = map fst weightedChildren
+            nodeSum = w + sum childWeights 
+            nodeMap = foldl M.union M.empty $ map snd weightedChildren
+        
 -- COMMON
 
 findRoot edges = head . Set.toList $ parents `Set.difference` children
