@@ -1,4 +1,8 @@
 
+# Stack
+.stack-work
+
+# Executables
 **/*.hi
 **/*.o
 **/*.exe

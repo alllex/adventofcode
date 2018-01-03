@@ -1,3 +1,4 @@
+module Day7 where
 
 import Data.List
 import Data.Maybe
@@ -6,14 +7,14 @@ import qualified Data.StringMap as M
 
 -- DAY 7
 
-main :: IO ()
-main = do
-    -- let result = "hi"
-    -- result <- day7 <$> readFile "day7.in"
-    result <- day7extra <$> readFile "day7.in"
-    -- let result = day7Tests
-    -- let result = day7ExtraTests
-    print result
+-- main :: IO ()
+-- main = do
+--     -- let result = "hi"
+--     -- result <- day7 <$> readFile "day7.in"
+--     result <- day7extra <$> readFile "day7.in"
+--     -- let result = day7Tests
+--     -- let result = day7ExtraTests
+--     print result
 
 -- DAY 7 PROBLEM
 

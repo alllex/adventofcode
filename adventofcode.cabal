@@ -1,0 +1,23 @@
+name:                adventofcode
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/alllex/adventofcode#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Aleksei Semin
+maintainer:          alllexsm@gmail.com
+copyright:           2018 Aleksei Semin
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+extra-source-files:  README.md
+
+executable adventofcode
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  other-modules:       Day7
+  default-language:    Haskell2010
+  build-depends:       base >= 4.7 && < 5, 
+                       containers >= 0.5 && < 1,
+                       data-stringmap >= 1.0.1.1 && < 2
