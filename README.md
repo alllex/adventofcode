@@ -2,6 +2,28 @@
 
 This repository contains solutions for puzzles from [Advent of code 2017](http://adventofcode.com/2017).
 
+## Run
+
+This project uses Haskell Stack.
+
+Start ghci:
+```bash
+$ stack ghci
+```
+
+Run tests for the day problem:
+```
+ghci> day9Test
+True
+ghci> day9extraTest
+True
+```
+
+Run solution on input file:
+```
+ghci> day9 <$> readFile "in/day9.in"
+```
+
 ## [Day 1](http://adventofcode.com/2017/day/1)
 
 ### Problem
@@ -175,6 +197,48 @@ The following sequence shows repeating configuration after `5` steps.
 For the previous problem, find the size of the loop in configurations.
 
 For the previous example the size is `4`.
+
+## [Day 9](http://adventofcode.com/2017/day/9)
+
+### Problem 
+
+Given a specially formatted string, find sum of scores for all groups in it.
+
+The rules are the following:
+* group starts with `'{'` and ends with `'}'`;
+* groups can be nested;
+* group's score is it's nestedness level;
+* the top group has a level `1`;
+* groups are separated by `','`;
+* there is garbage in the input;
+* garbage starts with `'<'` and ends with `'>'`;
+* any characters inside garbage except `'!'` must be ignored;
+* `'!'` character makes the next character ignored;
+* `'!'` can be inside or outside garbage;
+* `'!'` also ignores `'!'` if it follows;
+
+Examples:
+* `{}`, score of `1`.
+* `{{{}}}`, score of `1 + 2 + 3 = 6`.
+* `{{},{}}`, score of `1 + 2 + 2 = 5`.
+* `{{{},{},{{}}}}`, score of `1 + 2 + 3 + 3 + 3 + 4 = 16`.
+* `{<a>,<a>,<a>,<a>}`, score of `1`.
+* `{{<ab>},{<ab>},{<ab>},{<ab>}}`, score of `1 + 2 + 2 + 2 + 2 = 9`.
+* `{{<!!>},{<!!>},{<!!>},{<!!>}}`, score of `1 + 2 + 2 + 2 + 2 = 9`.
+* `{{<a!>},{<a!>},{<a!>},{<ab>}}`, score of `1 + 2 = 3`.
+
+### Extra problem 
+
+For the previous problem, count number of non-ignored characters *inside* garbage.
+
+Examples self-contained garbage:
+* `<>`, `0` characters.
+* `<random characters>`, `17` characters.
+* `<<<<>`, `3` characters.
+* `<{!>}>`, `2` characters.
+* `<!!>`, `0` characters.
+* `<!!!>>`, `0` characters.
+* `<{o"i!a,<{i<a>`, `10` characters.
 
 ## [Day 11](http://adventofcode.com/2017/day/11)
 
