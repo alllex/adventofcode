@@ -2,6 +2,9 @@
 # Stack
 .stack-work
 
+# GHCi
+.ghci
+
 # Executables
 **/*.hi
 **/*.o

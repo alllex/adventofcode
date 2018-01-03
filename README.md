@@ -175,3 +175,28 @@ The following sequence shows repeating configuration after `5` steps.
 For the previous problem, find the size of the loop in configurations.
 
 For the previous example the size is `4`.
+
+## [Day 11](http://adventofcode.com/2017/day/11)
+
+### Problem 
+
+Given directions on a hex grid, find the distance between the last position and the center.
+```
+  \ n  /
+nw +--+ ne
+  /    \
+-+      +-
+  \    /
+sw +--+ se
+  / s  \
+```
+
+For example:
+* `ne,ne,ne` is `3` steps away.
+* `ne,ne,sw,sw` is `0` steps away (back where you started).
+* `ne,ne,s,s` is `2` steps away (`se,se`).
+* `se,sw,se,sw,sw` is `3` steps away (`s,s,sw`).
+
+### Extra problem 
+
+For the previous problem, find the longest distance to the center throughout the whole journey.
