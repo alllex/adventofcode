@@ -1,68 +1,56 @@
 module Day7 where
 
 import Data.List
-import Data.Maybe
 import qualified Data.Set as Set
 import qualified Data.StringMap as M
 
--- DAY 7
-
--- main :: IO ()
--- main = do
---     -- let result = "hi"
---     -- result <- day7 <$> readFile "day7.in"
---     result <- day7extra <$> readFile "day7.in"
---     -- let result = day7Tests
---     -- let result = day7ExtraTests
---     print result
-
--- DAY 7 PROBLEM
 
 day7 :: String -> String
 day7 input = findRoot $ map parseLine $ lines input
 
--- DAY 7 EXTRA PROBLEM
-
-day7extra input = findTreeOutlier edgeMap wMap root
+day7extra :: String -> Int
+day7extra input = findTreeOutlier root rootTreeWeight
     where
         edges = map parseLine $ lines input
-        root = findRoot edges
-        edgeMap = foldl (\m (p, w, cs) -> M.insert p (w, cs) m) M.empty edges
-        (_, wMap) = weighChildren edgeMap root 
-        -- rootCs = map (\c -> (c, getWeight wMap c)) $ getChildren edgeMap root
+        root@(WeightedNode _ _ rootTreeWeight) = mkWeighted $ findRoot edges
+        cMap = foldl (\m (p, w, cs) -> M.insert p (w, cs) m) M.empty edges
+        wMap :: M.StringMap (Int, Int)
+        wMap = snd $ weighChildren cMap $ nodeIdOf root 
+        mkWeighted :: String -> WeightedNode
+        mkWeighted nId = let (w, tw) = wMap M.! nId in WeightedNode nId w tw
+        findTreeOutlier (WeightedNode pId pW pTw) expectedParentTotalWeight = 
+            let children = (map mkWeighted $ cMap `getChildren` pId) in
+            case findOutlier children of
+                Nothing -> pW + (expectedParentTotalWeight - pTw)
+                Just (expectedChildTreeWeight, outlier) -> findTreeOutlier outlier expectedChildTreeWeight
 
-findTreeOutlier cMap wMap node = findOutlier children
-    where
-        children = map (\c -> (c, getWeight wMap c)) $ getChildren cMap node
-        -- treeOutlier = case findOutlier children of 
-        --                Nothing -> Nothing
-        --                Just (nw, (outKey, outVal)) -> 
+data WeightedNode = WeightedNode { nodeIdOf :: String, nodeWeightOf :: Int, nodeTreeWeightOf :: Int } 
 
-findOutlierTests :: Bool
-findOutlierTests = let f = fst . snd . fromJust . findOutlier in 
-    (f [("a", 1), ("b", 2), ("c", 2)] == "a") && 
-    (f [("a", 2), ("b", 1), ("c", 2)] == "b") && 
-    (f [("a", 2), ("b", 2), ("c", 1)] == "c") 
+instance Show WeightedNode where
+    show (WeightedNode i w tw) = i ++ "(w=" ++ show w ++ ",tw=" ++ show tw ++ ")"
 
-findOutlier :: [(String, Int)] -> Maybe (Int, (String, Int))
-findOutlier [] = Nothing
-findOutlier [_] = Nothing
-findOutlier [_, _] = Nothing
-findOutlier (v1@(_, c1):vs@(v2@(_, c2):v3@(_, c3):_))
-        | c1 == c2 && c2 == c3 = findOutlier vs
-        | c1 /= c2 && c2 == c3 = Just (c2, v1)
-        | c1 == c3 && c2 /= c1 = Just (c3, v2)
-        | c1 == c2 && c2 /= c3 = Just (c1, v3)
+findOutlier :: [WeightedNode] -- ^ list of weighted nodes
+            -> Maybe (Int, WeightedNode) -- ^ normal tree weight and the outlier
+findOutlier (v1:vs@(v2:v3:_)) = case () of
+      _ | c1 == c2 && c2 == c3 -> findOutlier vs
+        | c1 /= c2 && c2 == c3 -> Just (c2, v1)
+        | c1 == c3 && c2 /= c1 -> Just (c3, v2)
+        | c1 == c2 && c2 /= c3 -> Just (c1, v3)
+    where 
+        c1 = nodeTreeWeightOf v1
+        c2 = nodeTreeWeightOf v2
+        c3 = nodeTreeWeightOf v3
 
-getWeight :: M.StringMap (Int, Int) -> String -> Int
-getWeight wMap node = snd $ (M.!) wMap node
+findOutlier _ = Nothing
 
 getChildren :: M.StringMap (Int, [String]) -> String -> [String]
 getChildren edgeMap parent = snd $ (M.!) edgeMap parent
 
 data Balance = Bal Int Int | Unbal Int deriving Show
 
-weighChildren :: M.StringMap (Int, [String]) -> String -> (Int, M.StringMap (Int, Int))
+weighChildren :: M.StringMap (Int, [String]) -- ^ mapping from node name to node's own weight and children list
+              -> String -- ^ node for which to weigh children
+              -> (Int, M.StringMap (Int, Int)) -- ^ nodes total weight and mapping for (all) chilren total weights
 weighChildren edgeMap parent = 
     case (M.!) edgeMap parent of
      (w, []) -> (w, M.singleton parent (w, w))
@@ -72,9 +60,8 @@ weighChildren edgeMap parent =
             childWeights = map fst weightedChildren
             nodeSum = w + sum childWeights 
             nodeMap = foldl M.union M.empty $ map snd weightedChildren
-        
--- COMMON
 
+findRoot :: Ord a => [(a, b, [a])] -> a
 findRoot edges = head . Set.toList $ parents `Set.difference` children
     where
         parents = Set.fromList $ map (\(p, _, _) -> p) edges

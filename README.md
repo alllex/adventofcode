@@ -198,6 +198,68 @@ For the previous problem, find the size of the loop in configurations.
 
 For the previous example the size is `4`.
 
+## [Day 7](http://adventofcode.com/2017/day/7)
+
+### Problem 
+
+Given a tree description in the following form, find the root of the tree.
+The numbers are node weights.
+```
+pbga (66)
+xhth (57)
+ebii (61)
+havc (66)
+ktlj (57)
+fwft (72) -> ktlj, cntj, xhth
+qoyq (66)
+padx (45) -> pbga, havc, qoyq
+tknk (41) -> ugml, padx, fwft
+jptl (61)
+ugml (68) -> gyxo, ebii, jptl
+gyxo (61)
+cntj (57)
+```
+
+This tree may look like this when constructed:
+```
+                gyxo
+              /     
+         ugml - ebii
+       /      \     
+      |         jptl
+      |        
+      |         pbga
+     /        /
+tknk --- padx - havc
+     \        \
+      |         qoyq
+      |             
+      |         ktlj
+       \      /     
+         fwft - cntj
+              \     
+                xhth
+```
+
+Therefore the root is `tknk`.
+
+### Extra problem
+
+There is an error in weights in the input for the previous problem.
+For each node in the tree total weight of each child (including weights of all sub-children) must be equal.
+
+From the given example:
+* `ugml` + (`gyxo` + `ebii` + `jptl`) = 68 + (61 + 61 + 61) = 251
+* `padx` + (`pbga` + `havc` + `qoyq`) = 45 + (66 + 66 + 66) = 243
+* `fwft` + (`ktlj` + `cntj` + `xhth`) = 72 + (57 + 57 + 57) = 243
+
+It is known that there is only one node which weight is incorrect.
+Find the correct weight which such a node must have.
+
+In the example it is `ugml` node which has weight `68` 
+but should have weight `60` so that the total weight of this node would be equal to `243` 
+as it is for other siblings.
+
 ## [Day 9](http://adventofcode.com/2017/day/9)
 
 ### Problem 
