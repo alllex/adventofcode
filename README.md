@@ -330,6 +330,8 @@ Examples self-contained garbage:
 * `<!!!>>`, `0` characters.
 * `<{o"i!a,<{i<a>`, `10` characters.
 
+## [Day 10](http://adventofcode.com/2017/day/10)
+
 ## [Day 11](http://adventofcode.com/2017/day/11)
 
 ### Problem 
