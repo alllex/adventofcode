@@ -260,6 +260,34 @@ In the example it is `ugml` node which has weight `68`
 but should have weight `60` so that the total weight of this node would be equal to `243` 
 as it is for other siblings.
 
+## [Day 8](http://adventofcode.com/2017/day/8)
+
+### Problem 
+
+Given a list of instructions for registers in the following form, find max register value after execution of all instructions.
+All registers start with value `0`. Register names are not known in advance.
+Each instruction must be executed only if condition hold and skipped otherwise.
+```
+<register name> <inc | dec> <signed number> if <register name> <op> <signed number>
+```
+Possible `<op>` values: `<` , `>`, `<=`, `>=`, `==`, `!=`.
+
+For example the following instructions are annotated with register values (after execution):
+```
+b inc 5 if a > 1         [a=0, b=0]
+a inc 1 if b < 5         [a=1, b=0]
+c dec -10 if a >= 1      [a=1, b=0, c=10]
+c inc -20 if c == 10     [a=1, b=0, c=-10]
+```
+
+The maximum value among all registers at the end is value `1` for register `a`.
+
+### Extra problem 
+
+For the previous problem, find maximum value among all registers at any point of execution.
+
+The answer for the given example is value `10` for register `c` after third instruction.
+
 ## [Day 9](http://adventofcode.com/2017/day/9)
 
 ### Problem 
