@@ -1,29 +1,8 @@
+module Day5 where
 
--- DAY 5
-
-main :: IO ()
-main = do
-    let result = "hi"
-    -- result <- day5 <$> readFile "day5.in"
-    -- result <- day5extra <$> readFile "day5.in"
-    -- let result = day5Tests
-    -- let result = day5ExtraTests
-    print result
-
--- DAY 5 PROBLEM
-
-day5Tests :: Bool
-day5Tests = let f = day5 in
-    (f "0 3 \n0 1 -3" == 5)
 
 day5 :: String -> Int
 day5 = jumpOut (+1) . tp . map read . words
-
--- DAY 5 EXTRA PROBLEM
-
-day5ExtraTests :: Bool
-day5ExtraTests = let f = day5extra in
-    (f "0 3 0 1 -3" == 10)
 
 day5extra :: String -> Int
 day5extra = jumpOut (\n -> if n >= 3 then n - 1 else n + 1) . tp . map read . words
@@ -51,3 +30,11 @@ move n (Tape t ls rs) | n < 0 && null ls = Result t
                       | n > 0 && length rs == 1 = Result t
                       | n > 0 = move (n - 1) (Tape t (head rs : ls) (tail rs))
                       | n < 0 = move (n + 1) (Tape t (tail ls) (head ls : rs))
+
+day5Tests :: Bool
+day5Tests = let f = day5 in
+    (f "0 3 \n0 1 -3" == 5)
+
+day5ExtraTests :: Bool
+day5ExtraTests = let f = day5extra in
+    (f "0 3 0 1 -3" == 10)

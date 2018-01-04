@@ -1,20 +1,8 @@
+module Day3 where 
 
 import Data.Maybe
-import Data.List
- ( find
- )
+import Data.List (find)
 
--- DAY 3
-
-main :: IO ()
-main = do
-    -- result <- day3 . read <$> readFile "day3.in"
-    -- result <- day3extra . read <$> readFile "day3.in"
-    -- let result = day3Tests
-    let result = "hi"
-    print result
-
--- DAY 3 PROBLEM
 
 {- Spiral
 17  16  15  14  13  .
@@ -24,13 +12,6 @@ main = do
 21  22  23  24  25 26
 -}
 
-day3Tests :: Bool
-day3Tests = let f = day3 in
-    (f 1 == 0) &&
-    (f 12 == 3) &&
-    (f 23 == 2) &&
-    (f 1024 == 31)
-
 day3 :: Int -> Int
 day3 k = level - 1 + onLevelDiff
     where level = spiralLevel k
@@ -39,14 +20,6 @@ day3 k = level - 1 + onLevelDiff
           halfSide = (side - 1) `div` 2
           sideCenters = map ((area-) . (*halfSide)) [1, 3, 5, 7]
           onLevelDiff = minimum $ map (abs . (k-)) sideCenters
-
-spiralLevelTests :: Bool
-spiralLevelTests = let f = spiralLevel in
-    (f 1 == 1) &&
-    (f 2 == 2) && (f 7 == 2) && (f 9 == 2) &&
-    (f 10 == 3) && (f 17 == 3) && (f 25 == 3) &&
-    (f 26 == 4) && (f 30 == 4) && 
-    (f 625 == 13)
 
 spiralLevel :: Int -> Int
 spiralLevel k = head [ l | l <- [1..], let s = l * 2 - 1, k <= s * s]
@@ -99,3 +72,18 @@ genSpiralLevels n = zip [startId..] markers ++ genSpiralLevels (n + 1)
                      ++ (PreCorner : Corner : PostCorner : normalMarkers) 
                      ++ (PreCorner : Corner : PostCorner : normalMarkers) 
                      ++ [PreSquare, Square]
+
+day3Tests :: Bool
+day3Tests = let f = day3 in
+    (f 1 == 0) &&
+    (f 12 == 3) &&
+    (f 23 == 2) &&
+    (f 1024 == 31)
+
+spiralLevelTests :: Bool
+spiralLevelTests = let f = spiralLevel in
+    (f 1 == 1) &&
+    (f 2 == 2) && (f 7 == 2) && (f 9 == 2) &&
+    (f 10 == 3) && (f 17 == 3) && (f 25 == 3) &&
+    (f 26 == 4) && (f 30 == 4) && 
+    (f 625 == 13)
