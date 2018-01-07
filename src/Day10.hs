@@ -1,8 +1,10 @@
 module Day10 where
 
-import Data.List.Split
-import Data.List
-import System.IO.Unsafe (unsafePerformIO)
+import Data.List.Split (chunksOf, splitOn)
+import Data.List (foldl')
+import Data.Char (ord)
+import Data.Bits (xor)
+import Numeric (showHex)
 
 import Utils (test)
 
@@ -12,11 +14,25 @@ day10 s = v1 * v2
     where 
         (v1:v2:_) = knotRotate 256 . map read . splitOn "," $ s
 
+day10extra :: String -> String
+day10extra = hexedHash . denseHash . sparseHash 256 . map ord
+
+sparseHash :: Int -> [Int] -> [Int]
+sparseHash size lengths = knotRotate size lengths64
+    where
+        lengths64 = concat . replicate 64 $ lengths ++ extraLengths
+
+denseHash :: [Int] -> [Int]
+denseHash xs = map (foldl1 xor) $ chunksOf 16 xs
+
+hexedHash :: [Int] -> String
+hexedHash = concatMap ((\s -> if length s == 1 then '0':s else s) . (`showHex` ""))
+
+extraLengths :: [Int]
+extraLengths = [17, 31, 73, 47, 23]
+
 knotRotate :: Int -> [Int] -> [Int]
-knotRotate size lengths = unsafePerformIO $ do
-    -- putStrLn $ "shiftSum=" ++ show shiftSum
-    -- putStrLn $ "finalShift=" ++ show finalShift
-    return $ rotate rotated finalShift
+knotRotate size lengths = rotate rotated finalShift
     where
         list = [0..size - 1]
         indexedLengths = zip [0..] lengths
@@ -26,12 +42,7 @@ knotRotate size lengths = unsafePerformIO $ do
         rotated = foldl' sub list indexedLengths
 
 knotIter :: Int -> Int -> Int -> [Int] -> [Int]
-knotIter size skipSize reverseLength xs = unsafePerformIO $ do
-    -- putStrLn $ "size=" ++ show size ++ ", ss=" ++ show skipSize ++ ", revLen=" ++ show reverseLength ++ ", rotLen=" ++ show rotateLength
-    -- putStrLn $ "original " ++ show xs
-    -- putStrLn $ "reversed " ++ show partiallyReversed
-    -- putStrLn $ "rotated  " ++ show rotated
-    return rotated
+knotIter size skipSize reverseLength xs = rotated
     where 
         partiallyReversed = reversePart xs reverseLength
         rotateLength = (reverseLength + skipSize) `mod` size

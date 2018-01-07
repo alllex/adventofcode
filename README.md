@@ -332,6 +332,8 @@ Examples self-contained garbage:
 
 ## [Day 10](http://adventofcode.com/2017/day/10)
 
+Description is too complicated, find it in the header link.
+
 ## [Day 11](http://adventofcode.com/2017/day/11)
 
 ### Problem 
