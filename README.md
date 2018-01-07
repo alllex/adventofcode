@@ -379,3 +379,7 @@ with vertex `0`. Graph may contain cycles.
 ### Extra problem 
 
 For the previous problem find number of connected components in the whole graph.
+
+## [Day 13](http://adventofcode.com/2017/day/13)
+
+Description is too complicated, find it in the header link.
