@@ -358,3 +358,24 @@ For example:
 ### Extra problem 
 
 For the previous problem, find the longest distance to the center throughout the whole journey.
+
+## [Day 12](http://adventofcode.com/2017/day/12)
+
+### Problem 
+
+Given a description of undirected graph, find how many verticies are in the 
+[connected component](https://en.wikipedia.org/wiki/Connected_component_(graph_theory))
+with vertex `0`. Graph may contain cycles.
+```
+0 <-> 2
+1 <-> 1
+2 <-> 0, 3, 4
+3 <-> 2, 4
+4 <-> 2, 3, 6
+5 <-> 6
+6 <-> 4, 5
+```
+
+### Extra problem 
+
+For the previous problem find number of connected components in the whole graph.
