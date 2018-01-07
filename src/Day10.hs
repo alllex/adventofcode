@@ -15,7 +15,10 @@ day10 s = v1 * v2
         (v1:v2:_) = knotRotate 256 . map read . splitOn "," $ s
 
 day10extra :: String -> String
-day10extra = hexedHash . denseHash . sparseHash 256 . map ord
+day10extra = knotHash
+
+knotHash :: String -> String
+knotHash = hexedHash . denseHash . sparseHash 256 . map ord
 
 sparseHash :: Int -> [Int] -> [Int]
 sparseHash size lengths = knotRotate size lengths64
