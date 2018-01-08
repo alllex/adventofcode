@@ -383,3 +383,5 @@ For the previous problem find number of connected components in the whole graph.
 ## [Day 13](http://adventofcode.com/2017/day/13)
 
 Description is too complicated, find it in the header link.
+
+## [Day 14](http://adventofcode.com/2017/day/14)

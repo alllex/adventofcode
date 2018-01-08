@@ -3,6 +3,7 @@ module Utils where
 import Data.Maybe
 import qualified Data.StringMap as M
 
+
 strToTable :: String -> [[Int]]
 strToTable = map (map read . words) . lines 
 
