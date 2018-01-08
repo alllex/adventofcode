@@ -1,8 +1,7 @@
 module Day14 where
 
 import Data.List.Split (chunksOf)
-import Numeric (readHex, showIntAtBase)
-import Data.Char (intToDigit)
+import Numeric (readHex)
 import Text.Printf (printf)
 
 import Day10 (knotHash)

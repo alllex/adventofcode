@@ -13,7 +13,10 @@ extra-source-files:  README.md
 executable adventofcode
   hs-source-dirs:      src
   main-is:             Main.hs
-  other-modules:       Utils, Day1, Day2, Day3, Day4, Day5, Day6, Day7, Day8, Day9, Day10, Day11, Day12, Day13, Day14
+  other-modules:       Utils, 
+                       Day1, Day2, Day3, Day4, Day5, 
+                       Day6, Day7, Day8, Day9, Day10, 
+                       Day11, Day12, Day13, Day14, Day15
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5, 
                        containers >= 0.5 && < 1,
