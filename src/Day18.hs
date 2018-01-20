@@ -1,11 +1,8 @@
 module Day18 where
 
-import Data.List (foldl')
 import Data.Char (isAlpha)
 import Data.List.Split (splitOn)
 import qualified Data.StringMap as M
-
-import System.IO.Unsafe (unsafePerformIO)
 
 import Utils (getOrPut, test)
 
@@ -26,37 +23,31 @@ day18 s = recover (M.empty, Init, 0)
                               _ -> recover acc'
 
 day18extra :: String -> Int
-day18extra s = runBoth 0 (Norm, (rMapInit0, 0, []), []) (Norm, (rMapInit1, 0, []), [])
+day18extra s = runBoth 0 [] (Norm, (M.singleton "p" 0, 0)) (Norm, (M.singleton "p" 1, 0))
     where
-        rMapInit0 = M.singleton "p" 0
-        rMapInit1 = M.singleton "p" 1
         commands = toCmds s
         cmdCount = length commands
         isOut k = k < 0 || cmdCount <= k
+        hangs st = st == Term || st == Wait
 
-        hangs (Term, _, _) = True
-        hangs (Wait, _, _) = True
-        hangs _ = False
-
-        runBoth sentCount1 state1 state2@(st2, (rMap2, index2, incoming2), outgoing2)
-            | hangs state1 && hangs state2 = sentCount1
+        runBoth :: Int -> [Int] -> (State, (StringIntMap, Int)) -> (State, (StringIntMap, Int)) -> Int
+        runBoth sentCount2 incomingTo1 (st1, (rMap1, index1)) (st2, (rMap2, index2))
+            | st1 == Term && hangs st2 = sentCount2
+            | st1 == Wait && incomingTo1 == [] && hangs st2 = sentCount2
             | otherwise = 
-                let (st1', (rMap1', index1', incoming1'), outgoing1') = run state1
-                    (st2', acc2', outgoing2') = run (st2, (rMap2, index2, incoming2 ++ reverse outgoing1'), outgoing2)
-                    sentCount1' = sentCount1 + length outgoing1'
-                in runBoth sentCount1' (st1', (rMap1', index1', incoming1' ++ reverse outgoing2'), []) (st2', acc2', [])
+                let (st1', (rMap1', index1', _), outgoing1') = run (st1, (rMap1, index1, incomingTo1), [])
+                    (st2', (rMap2', index2', _), outgoing2') = run (st2, (rMap2, index2, reverse outgoing1'), [])
+                    sentCount2' = sentCount2 + length outgoing2'
+                in runBoth sentCount2' (reverse outgoing2') (st1', (rMap1', index1')) (st2', (rMap2', index2'))
 
         run acc@(Term, _, _) = acc
         run acc@(Wait, (_, _, []), _) = acc
+        run (Send v, acc, outgoing) = run (Norm, acc, v : outgoing)
         run (state, acc@(rMap, index, incoming), outgoing)
             | isOut index = (Term, (rMap, index, incoming), outgoing)
             | otherwise = 
-                let cmd = commands !! index
-                    (state', acc') = execCmd state acc cmd
-                in case state' of
-                    (Send v) -> run (state', acc', v : outgoing)
-                    Norm -> run (state', acc', outgoing)
-                    _ -> (state', acc, outgoing)
+                let (state', acc') = execCmd state acc $ commands !! index
+                in run (state', acc', outgoing)
 
 execCmd :: State -> (StringIntMap, Int, [Int]) -> Cmd -> (State, (StringIntMap, Int, [Int]))
 execCmd Term acc _ = (Term, acc)
@@ -74,7 +65,7 @@ execCmd _ (rMap, i, incoming) cmd = case cmd of
         in (Send pVal, (rMap', i + 1, incoming))
     _ -> error "unexpected cmd"
 
-data State = Norm | Send Int | Wait | Term deriving Show
+data State = Norm | Send Int | Wait | Term deriving (Show, Eq)
 
 toCmds :: String -> [Cmd]
 toCmds = map (toCmd . splitOn " ") . lines
@@ -145,4 +136,9 @@ data CmdParam = Val Int | Reg String deriving Show
 testDay18 :: Bool
 testDay18 = all (test day18) 
     [ ("set a 1\nadd a 2\nmul a a\nmod a 5\nsnd a\nset a 0\nrcv a\njgz a -1\nset a 1\njgz a -2", 4)
+    ]
+
+testDay18extra :: Bool
+testDay18extra = all (test day18extra) 
+    [ ("snd 1\nsnd 2\nsnd p\nrcv a\nrcv b\nrcv c\nrcv d", 3)
     ]
