@@ -5,6 +5,8 @@ import Data.Char (isAlpha)
 import Data.List.Split (splitOn)
 import qualified Data.StringMap as M
 
+import System.IO.Unsafe (unsafePerformIO)
+
 import Utils (getOrPut, test)
 
 type StringIntMap = M.StringMap Int
@@ -59,7 +61,7 @@ day18extra s = runBoth 0 (Norm, (rMapInit0, 0, []), []) (Norm, (rMapInit1, 0, []
 execCmd :: State -> (StringIntMap, Int, [Int]) -> Cmd -> (State, (StringIntMap, Int, [Int]))
 execCmd Term acc _ = (Term, acc)
 execCmd _ (rMap, i, incoming) cmd = case cmd of
-    (Mth r p op) -> (Norm, (regOp rMap r p op, i + 1, incoming))
+    (Mth _ r p op) -> (Norm, (regOp rMap r p op, i + 1, incoming))
     (Jgz p1 p2) -> 
         let (rMap', j) = doJump rMap i p1 p2 
         in (Norm, (rMap', j, incoming))
@@ -79,7 +81,7 @@ toCmds = map (toCmd . splitOn " ") . lines
 
 execSoundCmd :: (StringIntMap, SoundState, Int) -> Cmd -> (StringIntMap, SoundState, Int)
 execSoundCmd (rMap, state, i) cmd = case cmd of
-    (Mth r p op) -> (regOp rMap r p op, state, i + 1)
+    (Mth _ r p op) -> (regOp rMap r p op, state, i + 1)
     (Jgz p1 p2) -> let (rMap', j) = doJump rMap i p1 p2 in (rMap', state, j)
     (Snd p) -> 
         let (pVal, rMap') = rMap `getParamValue` p 
@@ -97,7 +99,7 @@ doJump rMap i p1 p2 =
         j = if p1Val > 0 then i + p2Val else i + 1
     in (rMap2, j)
 
-data SoundState = Init | LastSnd Int | LastRcv Int
+data SoundState = Init | LastSnd Int | LastRcv Int deriving Show
 
 regOp :: StringIntMap -> String -> CmdParam -> (Int -> Int -> Int) -> StringIntMap
 regOp rMap r p op = rMap3
@@ -112,10 +114,10 @@ getParamValue rMap (Reg r) = getOrPut rMap r 0
 
 toCmd :: [String] -> Cmd
 toCmd ["snd", v] = Snd $ toCmdParam v
-toCmd ["set", r, v] = Mth r (toCmdParam v) (\_ u -> u)
-toCmd ["add", r, v] = Mth r (toCmdParam v) (+)
-toCmd ["mul", r, v] = Mth r (toCmdParam v) (*)
-toCmd ["mod", r, v] = Mth r (toCmdParam v) mod
+toCmd ["set", r, v] = Mth "set" r (toCmdParam v) (\_ u -> u)
+toCmd ["add", r, v] = Mth "add" r (toCmdParam v) (+)
+toCmd ["mul", r, v] = Mth "mul" r (toCmdParam v) (*)
+toCmd ["mod", r, v] = Mth "mod" r (toCmdParam v) mod
 toCmd ["rcv", v] = Rcv $ toCmdParam v
 toCmd ["jgz", x, y] = Jgz (toCmdParam x) (toCmdParam y)
 toCmd vs = error $ "unexpected cmd: " ++ show vs
@@ -129,7 +131,13 @@ toCmdParam s = error $ "unexpected cmd param: " ++ s
 data Cmd = Snd CmdParam
          | Rcv CmdParam
          | Jgz CmdParam CmdParam
-         | Mth String CmdParam (Int -> Int -> Int)
+         | Mth String String CmdParam (Int -> Int -> Int)
+
+instance Show Cmd where
+    show (Snd p) = "Snd (" ++ show p ++ ")"
+    show (Rcv p) = "Rcv (" ++ show p ++ ")"
+    show (Jgz x y) = "Jgz (" ++ show x ++ ") (" ++ show y ++ ")" 
+    show (Mth name r p _) = "Mth[" ++ name ++ "] " ++ r ++ " (" ++ show p ++ ")"
 
 data CmdParam = Val Int | Reg String deriving Show
 
