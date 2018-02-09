@@ -6,11 +6,39 @@ import Control.Monad.ST
 import Control.Monad
 import Data.STRef
 
-type NodeMap = V.Vector (V.Vector Int)
-
--- sampleInput = "..#\n#..\n..."
-
 day22 input = nodesSeqAt input 1000 10000
+
+day22extra input = let (_, _, c) = nodesAt input 500 10000000 in c
+
+nodesAt :: String -> Int -> Int -> (Direction, (Int, Int), Int)
+nodesAt input n k = runST $ do 
+    let vecMap = map V.fromList initMap
+    mMap <- V.fromList <$> mapM V.thaw vecMap 
+    mSt <- newSTRef (U, (start, start), 0)
+    replicateM_ k $ do 
+        (d, ij@(i, j), c) <- readSTRef mSt
+        let row = mMap V.! i
+        v <- M.read row j
+        let v' = visitNode v
+        let d' = changeDir v d
+        let c' = if v' == I then c + 1 else c
+        M.write row j v'
+        writeSTRef mSt (d', move ij d', c')
+    readSTRef mSt
+    where
+        start = (n + 1) `div` 2 - 1
+        initMap = map (map (\x -> if x == 1 then I else C)) $ wrapMap n $ readMap input
+
+changeDir v d = case v of 
+    I -> turnRight d
+    C -> turnLeft d
+    F -> turnBack d
+    W -> d
+
+visitNode F = C
+visitNode I = F
+visitNode W = I
+visitNode C = W
 
 nodesSeqAt :: String -> Int -> Int -> Int
 nodesSeqAt input n k = runST $ do 
@@ -25,7 +53,7 @@ nodesSeqAt input n k = runST $ do
         let d' = if v == 1 then turnRight d else turnLeft d
         let c' = if v' == 1 then c + 1 else c
         M.write row j v'
-        writeSTRef mSt (d', move ij d', if v' == 1 then c + 1 else c)
+        writeSTRef mSt (d', move ij d', c')
     (_, _, c) <- readSTRef mSt
     return c
     where
@@ -61,4 +89,11 @@ turnRight D = L
 turnRight L = U
 turnRight R = D
 
+turnBack U = D
+turnBack D = U
+turnBack L = R
+turnBack R = L
+
 data Direction = U | D | L | R deriving (Show, Eq)
+
+data NodeState = F | W | I | C deriving (Show, Eq)
