@@ -33,7 +33,7 @@ day18extra s = runBoth 0 [] (Norm, (M.singleton "p" 0, 0)) (Norm, (M.singleton "
         runBoth :: Int -> [Int] -> (State, (StringIntMap, Int)) -> (State, (StringIntMap, Int)) -> Int
         runBoth sentCount2 incomingTo1 (st1, (rMap1, index1)) (st2, (rMap2, index2))
             | st1 == Term && hangs st2 = sentCount2
-            | st1 == Wait && incomingTo1 == [] && hangs st2 = sentCount2
+            | st1 == Wait && null incomingTo1 && hangs st2 = sentCount2
             | otherwise = 
                 let (st1', (rMap1', index1', _), outgoing1') = run (st1, (rMap1, index1, incomingTo1), [])
                     (st2', (rMap2', index2', _), outgoing2') = run (st2, (rMap2, index2, reverse outgoing1'), [])

@@ -1,12 +1,12 @@
-resolver: lts-10.3
+resolver: lts-10.5
 allow-newer: true
 
 packages:
 - .
 
 extra-deps:
-- data-stringmap-1.0.1.1
 - split-0.2.3.2
+- data-stringmap-1.0.1.1
 - vector-0.12.0.1
 - template-haskell-2.12.0.0
 - regex-1.0.1.3

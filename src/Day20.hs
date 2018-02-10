@@ -33,7 +33,7 @@ minus3d a b = a `plus3d` neg3d b
 
 collisionTime (_, p, v, a) (_, p', v', a') = roots
     where
-        ((V3D pdx pdy pdz), (V3D vdx vdy vdz), (V3D adx ady adz)) = (p `minus3d` p', v `minus3d` v', a `minus3d` a')
+        (V3D pdx pdy pdz, V3D vdx vdy vdz, V3D adx ady adz) = (p `minus3d` p', v `minus3d` v', a `minus3d` a')
         rootsX = roots2d adx vdx pdx
         rootsY = roots2d ady vdy pdy
         rootsZ = roots2d adz vdz pdz

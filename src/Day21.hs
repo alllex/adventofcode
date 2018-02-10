@@ -3,6 +3,7 @@ module Day21 where
 import Data.List.Split (splitOn, chunksOf)
 import Data.List (group, groupBy, sort, transpose)
 import Data.Maybe (fromJust)
+import Control.Arrow (first)
 
 type Grid = [[Int]]
 
@@ -20,7 +21,7 @@ gridSeq rulesStr = iterate growGrid startGrid
         startGrid = [[0, 1, 0], [0, 0, 1], [1, 1, 1]]
 
         ruleBook :: [([Grid], Grid)] 
-        ruleBook = map (\(f, t) -> (transformations f, t)) $ readRules rulesStr
+        ruleBook = map (first transformations) $ readRules rulesStr
 
         enhance :: Grid -> Grid 
         enhance g = fromJust $ head $ filter (/= Nothing) $ map (\(ins, outs) -> if g `elem` ins then Just outs else Nothing) ruleBook

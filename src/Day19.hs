@@ -7,13 +7,13 @@ import Utils (test)
 day19 :: String -> String
 day19 input = reverse . snd $ travel cells 0 (-1) startJ "" D
     where
-        cells = V.fromList $ map (\l -> V.fromList $ map charToCell l) $ lines input
+        cells = V.fromList $ map (V.fromList . map charToCell) $ lines input
         startJ = findStart 0 $ V.toList $ V.head cells
 
 day19extra :: String -> Int
 day19extra input = fst $ travel cells 0 (-1) startJ "" D
     where
-        cells = V.fromList $ map (\l -> V.fromList $ map charToCell l) $ lines input
+        cells = V.fromList $ map (V.fromList . map charToCell) $ lines input
         startJ = findStart 0 $ V.toList $ V.head cells
 
 findStart :: Int -> [Cell] -> Int
@@ -34,14 +34,10 @@ travel cells steps ii jj path dir =
         cell = (cells V.! i) V.! j
 
 intersectDir :: V.Vector (V.Vector Cell) -> Int -> Int -> Direction -> Direction
-intersectDir cells i j dir = 
-    if dir == U || dir == D 
-    then if isNotEmpty cells i (j - 1)
-         then L 
-         else R
-    else if isNotEmpty cells (i - 1) j
-         then U
-         else D
+intersectDir cells i j dir 
+    | dir == U || dir == D = if isNotEmpty cells i (j - 1) then L else R
+    | isNotEmpty cells (i - 1) j = U
+    | otherwise = D
 
 isNotEmpty :: V.Vector (V.Vector Cell) -> Int -> Int -> Bool
 isNotEmpty cells i j = (cells V.! i) V.! j /= S
