@@ -6,8 +6,10 @@ import Control.Monad.ST
 import Control.Monad
 import Data.STRef
 
+day22 :: String -> Int
 day22 input = nodesSeqAt input 1000 10000
 
+day22extra :: String -> Int
 day22extra input = let (_, _, c) = nodesAt input 500 10000000 in c
 
 nodesAt :: String -> Int -> Int -> (Direction, (Int, Int), Int)
@@ -29,12 +31,14 @@ nodesAt input n k = runST $ do
         start = (n + 1) `div` 2 - 1
         initMap = map (map (\x -> if x == 1 then I else C)) $ wrapMap n $ readMap input
 
+changeDir :: NodeState -> Direction -> Direction
 changeDir v d = case v of 
     I -> turnRight d
     C -> turnLeft d
     F -> turnBack d
     W -> d
 
+visitNode :: NodeState -> NodeState
 visitNode F = C
 visitNode I = F
 visitNode W = I
@@ -73,22 +77,26 @@ wrapMap n mp = fullZerosLayer ++ map wrapLevel mp ++ fullZerosLayer
         fullZerosLayer = replicate emptyCount fullZeros
         wrapLevel lvl = suffixZeros ++ lvl ++ suffixZeros
 
+move :: (Int, Int) -> Direction -> (Int, Int)
 move (i, j) d = case d of
     U -> (i - 1, j)
     D -> (i + 1, j)
     L -> (i, j - 1)
     R -> (i, j + 1)
 
+turnLeft :: Direction -> Direction
 turnLeft U = L
 turnLeft D = R
 turnLeft L = D
 turnLeft R = U
 
+turnRight :: Direction -> Direction
 turnRight U = R
 turnRight D = L
 turnRight L = U
 turnRight R = D
 
+turnBack :: Direction -> Direction
 turnBack U = D
 turnBack D = U
 turnBack L = R

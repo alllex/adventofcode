@@ -1,14 +1,16 @@
 module Day21 where
 
 import Data.List.Split (splitOn, chunksOf)
-import Data.List (group, groupBy, sort, transpose)
+import Data.List (group, sort, transpose)
 import Data.Maybe (fromJust)
 import Control.Arrow (first)
 
 type Grid = [[Int]]
 
+day21 :: String -> Int
 day21 input = countActivePixels $ gridSeq input !! 5
 
+day21extra :: String -> Int
 day21extra input = countActivePixels $ gridSeq input !! 18
 
 countActivePixels :: Grid -> Int
