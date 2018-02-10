@@ -2,6 +2,8 @@
 
 This repository contains solutions for puzzles from [Advent of code 2017](http://adventofcode.com/2017).
 
+![alt text](proof.gif "All puzzles solved!")
+
 ## Run
 
 This project uses Haskell Stack.
