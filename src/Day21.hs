@@ -39,11 +39,22 @@ splitGrid g = if length g `mod` 2 == 0 then sp 2 g else sp 3 g
 mergeGrid :: [[Grid]] -> Grid
 mergeGrid = concatMap (map concat . transpose)
 
+readRules :: String -> [([[Int]], [[Int]])]
 readRules = map ((\[f, t] -> (readGrid f, readGrid t)) . splitOn " => ") . lines
+
+readGrid :: String -> [[Int]]
 readGrid = map (map (\c -> if c == '#' then 1 else 0)) . splitOn "/"
+
+transformations :: Ord a => [[a]] -> [[[a]]]
 transformations grid = rmdups $ let rs = rotates grid in rs ++ map flipGrid rs
+
+rotates :: [[a]] -> [[[a]]]
 rotates = take 4 . iterate rotateGrid
+
+flipGrid :: [a] -> [a]
 flipGrid = reverse
+
+rotateGrid :: [[a]] -> [[a]]
 rotateGrid = reverse . transpose
         
 rmdups :: (Ord a) => [a] -> [a]
